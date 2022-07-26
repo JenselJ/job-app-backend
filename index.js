@@ -78,12 +78,9 @@ app.post("/comments", async (req, res) => {
   const commentsId = uuid();
   const id = req.body.id;
   const comment = req.body.comment
-  jobsArray.map(job => {
+  jobsArray.forEach(job => {
     if (id === job.id) {
       job.comments.push({comment: comment, id: commentsId})
-      return job.comments
-    } else {
-      return "no id match"
     }
   })
   console.log(jobsArray)
