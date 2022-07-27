@@ -1,8 +1,8 @@
 const fs = require("fs/promises");
 const express = require("express");
 const cors = require("cors");
-const path = require('path');
 const { v4: uuid } = require("uuid");
+const path = './data.json'
 
 const app = express();
 
@@ -12,6 +12,7 @@ app.use(cors())
 let jobsArray = [
 
 ]
+
 
 // app.get('/', function(req, res) {
 //   res.sendFile(path.join(__dirname, '/index.html'));
@@ -68,9 +69,13 @@ app.post("/jobs", async (req, res) => {
   const job = req.body.job;
   const description = req.body.description;
   jobsArray.push({job: job, description: description, id: id, comments: []})
+  fs.writeFile("data.json", JSON.stringify(jobsArray), (err) => {
+    if (err) throw err;
+    console.log("done writing...")
+  })
   console.log(jobsArray)
   res.status(200).json({
-    message: "okay"
+    message: "done writing..."
   })
 })
 
@@ -90,7 +95,16 @@ app.post("/comments", async (req, res) => {
   })
 })
 
-app.get("/jobs", (req,res) => {
+app.get("/jobs", async (req,res, jobsArray) => {
+
+  await fs.readFile('./data.json', 'utf-8', (error, data, jobsArray) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    console.log(JSON.parse(data))
+    let jobsArray = JSON.parse(data)
+  })
   let content = jobsArray;
   console.log(content)
   res.json({
