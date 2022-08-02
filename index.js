@@ -3,16 +3,26 @@ const express = require("express");
 const cors = require("cors");
 const { v4: uuid } = require("uuid");
 const path = './data.json'
+const fss = require("fs")
 
 const app = express();
 
 app.use(express.json());
 app.use(cors())
 
-let jobsArray = [
 
-]
 
+let content;
+
+  try {
+    content = fss.readFileSync(`data.json`, "utf-8")
+    console.log(content)
+  } catch(error) {
+    console.error(error)
+  }
+
+  let jobsArray = JSON.parse(content)
+  console.log(jobsArray)
 
 // app.get('/', function(req, res) {
 //   res.sendFile(path.join(__dirname, '/index.html'));
@@ -95,21 +105,33 @@ app.post("/comments", async (req, res) => {
   })
 })
 
-app.get("/jobs", async (req,res, jobsArray) => {
+// app.get("/jobs", async (req,res) => {
 
-  await fs.readFile('./data.json', 'utf-8', (error, data, jobsArray) => {
-    if (error) {
-      console.log(error);
-      return;
-    }
-    console.log(JSON.parse(data))
-    let jobsArray = JSON.parse(data)
-  })
-  let content = jobsArray;
-  console.log(content)
-  res.json({
-    content: content
-  })
+//   await fs.readFile('./data.json', 'utf-8', (error, data) => {
+//     if (error) {
+//       console.log(error);
+//       return;
+//     }
+//     console.log(JSON.parse(data))
+//   })
+//   let content = this.JSON.parse(data)
+//   console.log(content)
+//   res.json({
+//     content: content
+//   })
+// })
+
+app.get("/jobs", async (req, res) => {
+ 
+  try{
+    res.json({
+      content: jobsArray
+    });
+  } catch(error) {
+    console.error(error)
+  }
+  
 })
+
 
 app.listen(4200, () => console.log("API Server is running..."));
