@@ -105,6 +105,18 @@ app.post("/comments", async (req, res) => {
   })
 })
 
+app.post("/deletecomment", async (req, res) => {
+  const id = req.body.id;
+  jobsArray.forEach(job => {
+    job.comments.filter(comment => comment.id !== id)
+  })
+  console.log(jobsArray)
+  console.log(jobsArray[0].comments)
+  res.status(200).json({
+    message: "okay"
+  })
+})
+
 // app.get("/jobs", async (req,res) => {
 
 //   await fs.readFile('./data.json', 'utf-8', (error, data) => {
