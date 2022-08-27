@@ -99,7 +99,9 @@ app.post("/comments", async (req, res) => {
     }
   })
   console.log(jobsArray)
-  console.log(jobsArray[0].comments)
+  jobsArray.forEach(job => {
+      console.log(job.comments)
+  })
   res.status(200).json({
     message: "okay"
   })
@@ -111,9 +113,11 @@ app.post("/deletecomment", async (req, res) => {
     job.comments.filter(comment => comment.id !== id)
   })
   console.log(jobsArray)
-  console.log(jobsArray[0].comments)
+  jobsArray.forEach(job => {
+      console.log(job.comments)
+  })
   res.status(200).json({
-    message: "okay"
+    message: id
   })
 })
 
