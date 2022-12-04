@@ -1,3 +1,4 @@
+const port = process.env.PORT || 5000;
 const fs = require("fs/promises");
 const express = require("express");
 const cors = require("cors");
@@ -193,6 +194,4 @@ app.get("/", function (req, res) {
   res.send("working!");
 });
 
-app.listen(process.env.PORT);
-
-// app.listen(4200, () => console.log("API Server is running..."));
+app.listen(PORT, () => console.log("API Server is running..."));
