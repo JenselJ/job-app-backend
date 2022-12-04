@@ -2,27 +2,25 @@ const fs = require("fs/promises");
 const express = require("express");
 const cors = require("cors");
 const { v4: uuid } = require("uuid");
-const path = './data.json'
-const fss = require("fs")
+const path = "./data.json";
+const fss = require("fs");
 
 const app = express();
 
 app.use(express.json());
-app.use(cors())
-
-
+app.use(cors());
 
 let content;
 
-  try {
-    content = fss.readFileSync(`data.json`, "utf-8")
-    console.log(content)
-  } catch(error) {
-    console.error(error)
-  }
+try {
+  content = fss.readFileSync(`data.json`, "utf-8");
+  console.log(content);
+} catch (error) {
+  console.error(error);
+}
 
-  let jobsArray = JSON.parse(content)
-  console.log(jobsArray)
+let jobsArray = JSON.parse(content);
+console.log(jobsArray);
 
 // app.get('/', function(req, res) {
 //   res.sendFile(path.join(__dirname, '/index.html'));
@@ -32,7 +30,6 @@ let content;
 //   const tops = ["Black", "White", "Orange", "Navy"];
 //   const jeans = ["Grey", "Dark Grey", "Black", "Navy"];
 //   const shoes = ["White", "Grey", "Black"];
-
 
 //   res.json({
 //     top: _.sample(tops),
@@ -78,48 +75,93 @@ app.post("/jobs", async (req, res) => {
   const id = uuid();
   const job = req.body.job;
   const description = req.body.description;
-  jobsArray.push({job: job, description: description, id: id, comments: []})
+  const email = req.body.email;
+  const userId = req.body.userId;
+  const salary = req.body.salary;
+  const salaryUnit = req.body.salaryUnit;
+  const contactEmail = req.body.contactEmail;
+  jobsArray.push({
+    job: job,
+    description: description,
+    id: id,
+    email: email,
+    userId: userId,
+    salary: salary,
+    salaryUnit: salaryUnit,
+    contactEmail: contactEmail,
+    comments: [],
+  });
   fs.writeFile("data.json", JSON.stringify(jobsArray), (err) => {
     if (err) throw err;
-    console.log("done writing...")
-  })
-  console.log(jobsArray)
+    console.log("done writing...");
+  });
+  console.log(jobsArray);
   res.status(200).json({
-    message: "done writing..."
-  })
-})
+    message: "done writing...",
+  });
+});
 
 app.post("/comments", async (req, res) => {
   const commentsId = uuid();
   const id = req.body.id;
-  const comment = req.body.comment
-  jobsArray.forEach(job => {
+  const email = req.body.email;
+  const userId = req.body.userId;
+  const comment = req.body.comment;
+  const username = req.body.username;
+  jobsArray.forEach((job) => {
     if (id === job.id) {
-      job.comments.push({comment: comment, id: commentsId})
+      job.comments.push({
+        comment: comment,
+        id: commentsId,
+        email: email,
+        userId: userId,
+        username: username,
+      });
     }
-  })
-  console.log(jobsArray)
-  jobsArray.forEach(job => {
-      console.log(job.comments)
-  })
+  });
+  console.log(jobsArray);
+  jobsArray.forEach((job) => {
+    console.log(job.comments);
+  });
+  fs.writeFile("data.json", JSON.stringify(jobsArray), (err) => {
+    if (err) throw err;
+    console.log("done writing...");
+  });
   res.status(200).json({
-    message: "okay"
-  })
-})
+    message: "okay",
+  });
+});
 
 app.post("/deletecomment", async (req, res) => {
   const id = req.body.id;
-  jobsArray.forEach(job => {
-    job.comments.filter(comment => comment.id !== id)
-  })
-  console.log(jobsArray)
-  jobsArray.forEach(job => {
-      console.log(job.comments)
-  })
+  jobsArray.forEach((job) => {
+    job.comments = job.comments.filter((comment) => comment.id !== id);
+  });
+  console.log(jobsArray);
+  jobsArray.forEach((job) => {
+    console.log(job.comments);
+  });
+  fs.writeFile("data.json", JSON.stringify(jobsArray), (err) => {
+    if (err) throw err;
+    console.log("done writing...");
+  });
   res.status(200).json({
-    message: id
-  })
-})
+    message: id,
+  });
+});
+
+app.post("/deletejob", async (req, res) => {
+  const id = req.body.id;
+  jobsArray = jobsArray.filter((job) => job.id !== id);
+  console.log(jobsArray);
+  fs.writeFile("data.json", JSON.stringify(jobsArray), (err) => {
+    if (err) throw err;
+    console.log("done writing...");
+  });
+  res.status(200).json({
+    message: id,
+  });
+});
 
 // app.get("/jobs", async (req,res) => {
 
@@ -138,22 +180,19 @@ app.post("/deletecomment", async (req, res) => {
 // })
 
 app.get("/jobs", async (req, res) => {
- 
-  try{
+  try {
     res.json({
-      content: jobsArray
+      content: jobsArray,
     });
-  } catch(error) {
-    console.error(error)
+  } catch (error) {
+    console.error(error);
   }
-  
-})
+});
 
-app.get('/', function (req, res) {
-  res.send('working!')
-})
+app.get("/", function (req, res) {
+  res.send("working!");
+});
 
+// app.listen(process.env.PORT)
 
-app.listen(process.env.PORT)
-
-// app.listen(4200, () => console.log("API Server is running..."));
+app.listen(4200, () => console.log("API Server is running..."));
