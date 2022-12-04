@@ -193,6 +193,6 @@ app.get("/", function (req, res) {
   res.send("working!");
 });
 
-// app.listen(process.env.PORT)
+app.listen(process.env.PORT);
 
-app.listen(4200, () => console.log("API Server is running..."));
+// app.listen(4200, () => console.log("API Server is running..."));
