@@ -81,6 +81,7 @@ app.post("/jobs", async (req, res) => {
   const salary = req.body.salary;
   const salaryUnit = req.body.salaryUnit;
   const contactEmail = req.body.contactEmail;
+  const companyName = req.body.companyName;
   jobsArray.push({
     job: job,
     description: description,
@@ -90,6 +91,7 @@ app.post("/jobs", async (req, res) => {
     salary: salary,
     salaryUnit: salaryUnit,
     contactEmail: contactEmail,
+    companyName: companyName,
     comments: [],
   });
   fs.writeFile("data.json", JSON.stringify(jobsArray), (err) => {
