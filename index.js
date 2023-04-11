@@ -83,6 +83,7 @@ app.post("/jobs", async (req, res) => {
   const contactEmail = req.body.contactEmail;
   const companyName = req.body.companyName;
   const location = req.body.location;
+  const jobType = req.body.jobType;
   jobsArray.push({
     job: job,
     description: description,
@@ -95,6 +96,7 @@ app.post("/jobs", async (req, res) => {
     companyName: companyName,
     location: location,
     comments: [],
+    jobType: jobType,
   });
   fs.writeFile("data.json", JSON.stringify(jobsArray), (err) => {
     if (err) throw err;
